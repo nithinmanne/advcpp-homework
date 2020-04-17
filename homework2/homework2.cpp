@@ -18,11 +18,8 @@ public:
     Computed(Computed const&) = default;
     Computed& operator=(Computed const&) = default;
 
-    const std::string& getComputed() const& {
+    const std::string& getComputed() const {
         return computed;
-    }
-    std::string getComputed()&& {
-        return std::move(computed);
     }
 };
 
