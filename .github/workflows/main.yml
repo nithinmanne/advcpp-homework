@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -24,10 +24,10 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Compile Code
-      run: MSBuild
+      run: make
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
-        x64\Debug\homework1
-        x64\Debug\homework2
+        homework1/homework1.cpp.exe
+        homework2/homework2.cpp.exe
