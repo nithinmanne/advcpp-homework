@@ -1,0 +1,48 @@
+Part 1:
+
+I will be discussing about the various comparision operators of std::expected.
+This is mostly from Sections 1.11, 1.12 and 1.13 from the standard proposal. I will
+also be discussing a little about the open questions regarding the comparisions
+present in Section 2.1 from the proposal.
+
+template<typename T, typename E> class expected;
+T -> Expected Type
+E -> Error Type
+
+The operators supported for comparision are equality(==) and inequality(!=). This
+class is comparable to three other classes, the first is an instance of itself.
+This equality is only true when both the classes have the same state and are
+carrying the same value. When both are carrying the expected value, the value
+that they are carrying needs to match(note that, the type they are carrying need
+not be the same, but equality between both these objects should hold) or also if
+both are expecting void. Similarly when they are both carrying the error value,
+the error objects should match for these classes to be equal. The second type of
+comparision is with an object of the expected type. This equality is only true
+when we are holding the expected value and the value matches the other object
+(And again, they need not be the same type, just the eqality operator between
+the two objects should return true). Here, none of the types can be void, 
+since a void object is meaningless. The last type of comparision is with an
+unexpected class object. Similar to the previous, this is only true if we are
+carrying an error result and the equality operator between what we are carrying
+and what the unexpected object is carrying is true.
+
+There are still a few oepn questions regarding these comparision operators.
+Some of them are:
+Is there even a need to expose this functionality, instead relying on the user
+to extract the correct object and compare it. If so, is there a need to expose
+the remaining comparision operators. Also, if we need to provide a way to hash
+the object and consequently its usage in map, ordered_map or similar containers.
+
+
+Part 2:
+
+This is the 9th Revision of this proposal, and it was first published on May 2014
+as N4015. As of today(April 26th 2020), this proposal has not been included into C++20.
+This paper has been reviewed by the The Library Evolution Working Group(LEWG), and
+has been forwarded to the Library Working Group(LWG), who will review it and include
+it in the Library Fundamentals TS v3. This will help the standards committee get
+feedback and it will be on track to be included in C++23. The latest update that
+I could find on this is https://github.com/cplusplus/papers/issues/254. The current
+milestone for this seems to be February 2020, and the last update to this was on
+April 15, 2020 by Jeff Garland who is the LWG Asst. Chair, who moved it to require
+the final approval from the LWG chair before being included into the LFTS.
