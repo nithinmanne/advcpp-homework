@@ -26,7 +26,7 @@ jobs:
     - name: Compile Code
       run: make
       env:
-        BOOST_ROOT: $BOOST_ROOT_1_72_0 
+        BOOST_ROOT: $(BOOST_ROOT_1_72_0)
 
     # Run Code
     - name: Run Code
