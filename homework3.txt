@@ -1,0 +1,14 @@
+Lambdas are essentially Closure objects with overloaded operator() method.
+The parameters that it captures are stored in the object. By default, the call
+to lambda is const-qualified(i.e., the operator() overload is const-qualified).
+This means that the objects that the class stores(all the captured objects) are
+all const in the context of the lambda. This means we can only call const-qualified
+functions on these objects. This is done to ensure that any call to the lambda will,
+by default, give the same result with the same parameters and that the call can be
+done using a const reference to the lambda. However, if we need to modify these
+objects, we can include mutable, which means that the call is no longer
+const-qualified and cannot be called from a const references to the lambda.
+
+The noexcept provides the exception specification for the call to the lambda.
+This is essentially applied to the operator() overload of the Closure object.
+The use for this is the same as marking any function as noexcept or not.
