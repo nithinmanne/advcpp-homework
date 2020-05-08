@@ -1,0 +1,18 @@
+Lambdas are essentially just class objects with overloaded operator() method.
+The parameters that it captures are stored in the object. By default, the call
+to lambda is const-qualified(i.e., the operator() overload is const-qualified).
+This means that the objects that the class stores(all the captured objects) are
+all const in the context of the lambda. However, if we need to modify these
+objects, we can include mutable, which means that the call is no longer
+const-qualified and cannot be called from a const references to the lambda.
+This will be used when we need to modify any of the stored copies or references,
+but now this isn't a const operation can't even be called from a const reference.
+
+The noexcept provides the exception specification for the call to the lambda.
+This is essentially applied to the operator() overload of the Closure object.
+This lets the compiler add some optmizations to this code. Also, it is possible
+by the receiver of this lambda to check this noexcept-ness. If its noexcept, the
+receiver can be sure that this function will not throw exceptions and write more
+optimal code when errors are not excepted. For example, vectors need the move
+operator to be noexcept to use move rather than copy, as an exception in one move
+in middle could leave both vectors in a bad state.
