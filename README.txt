@@ -12,6 +12,10 @@ This homework uses the Boost C++ Library. Please make sure to
 install it. If using Visual Studio, NuGet should install it
 automatically.
 
+Changes:
+Problem 1: Fix support for other char formats.
+Problem 3: Updated answer to be more accurate.
+
 Toolchains/Dependencies Used:
 1. Microsoft Visual Studio Enterprise 2019 Ver. 16.5.4
 2. Microsoft Visual C++ 2019 Ver. 14.25
