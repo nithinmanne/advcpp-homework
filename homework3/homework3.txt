@@ -1,0 +1,21 @@
+As expected CTRE performs much faster than std::regex, getting upto almost 10 times
+the speed. This is probably due to the fact that all the regex code is generated at
+compile time, rather than interpreted during execution. However, this has an extremely
+noticable difference in the time taken to compile. When using only regex, the compilation
+happens almost immediately, but with CTRE, it takes upto 5 seconds to compile. Also,
+the documentation for std::regex is more thorough and it has more features as compared
+to CTRE, which makes std::regex easier to use.
+
+
+Results Using Release Configuration:
+
+using_regex: 0.419501 seconds
+using_ctre: 0.0487833 seconds
+
+HW:
+Intel® Core™ i7-7700HQ Processor
+4C, 8T, up to 3.80 GHz
+SW:
+Microsoft Windows 10 Professional 1909 x64
+Microsoft Visual Studio Enterprise 2019 Ver. 16.5.4
+Microsoft Visual C++ 2019 Ver. 14.25
