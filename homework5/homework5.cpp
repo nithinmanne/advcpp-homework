@@ -48,7 +48,9 @@ struct Model<Caboose> : public Caboose {
 };
 
 template<typename T>
-struct Real : public T {};
+struct Real : public T {
+    using T::T;
+};
 
 template<>
 struct Real<Caboose> : public Caboose {

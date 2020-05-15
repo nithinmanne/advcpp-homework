@@ -49,9 +49,13 @@ struct ModelCaboose : public Caboose {
     }
 };
 
-struct RealLocomotive : Locomotive {};
+struct RealLocomotive : public Locomotive {
+    using Locomotive::Locomotive;
+};
 
-struct RealFreightCar : public FreightCar {};
+struct RealFreightCar : public FreightCar {
+    using FreightCar::FreightCar;
+};
 
 struct RealCaboose : public Caboose {
     virtual std::string use() {
