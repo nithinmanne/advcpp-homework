@@ -1,4 +1,4 @@
-Homework 
+Homework 6
 Naga Nithin Manne
 Advanced C++ (MPCS 51045)
 
@@ -11,3 +11,4 @@ using g++ with C++17.
 Toolchains/Dependencies Used:
 1. Microsoft Visual Studio Enterprise 2019 Ver. 16.5.4
 2. Microsoft Visual C++ 2019 Ver. 14.25
+3. Boehm-Demers-Weiser Garbage Collector Ver. 8.1.0
