@@ -11,6 +11,3 @@ This can prevent buffer overflows.
 For Linked List:
 Don't free a blocks memory before deleting all references to it.
 This makes it so none of the blocks point to freed memory.
-For Hashmap:
-The load factor is always less than the specified constant.
-This makes sure that we always get that O(1) goodness.
