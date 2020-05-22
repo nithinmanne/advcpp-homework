@@ -1,0 +1,14 @@
+Using CTAD, the template types for a class are automatically deduced
+but when using Type Erasure, the class is not even a template. It has
+templated constructors to store any type. CTAD still has all the type
+information, but happens completely transparently, which means that the
+type of two variables with different template is completely different
+and can't be interchangeably used in a non templated function. In Type
+Erasure, the type of all objects is the same and can be used completely
+interchangeably. Due to this, I think it would be better to use Type
+Erasure rather than relying on CTAD when expossing an API that takes
+and returns the exact same arguments. In the case of std::chrono, the
+duration class could have used Type Erasure, since regardless of the
+Rep and Period, it is used to mean the same thing. However, I think
+this would cause problems with arithmetic operations, since the logic
+would depend completely on the types of the template arguments.

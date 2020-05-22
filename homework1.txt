@@ -1,0 +1,13 @@
+An invariant for it could be:
+Any dynamically allocated memory should only be maintained
+using smart pointers. This makes it so that there can not
+be any memory leaks since all allocated memory will have
+references to it.
+
+Some Other Invariants Are:
+For Vector:
+The capacity is always greater than the actual size of vector.
+This can prevent buffer overflows.
+For Linked List:
+Don't free a blocks memory before deleting all references to it.
+This makes it so none of the blocks point to freed memory.
