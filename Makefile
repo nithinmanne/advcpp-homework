@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -I$(BOOST_ROOT) -O3 -std=c++17
+CXXFLAGS := -I$(BOOST_ROOT) -lpthread -pthread -latomic -O3 -std=c++17
 
 DIRS := ./homework*
 
