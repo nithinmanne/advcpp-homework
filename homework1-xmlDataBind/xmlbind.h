@@ -161,8 +161,11 @@ struct global_scope;
 struct complex_type;
 struct builtin_type;
 struct string_type;
+struct integer_type;
+struct double_type;
+struct date_type;
 
-using all_types = typelist<type_base, global_scope, complex_type, builtin_type, string_type>;
+using all_types = typelist<type_base, global_scope, complex_type, builtin_type, string_type, integer_type, double_type, date_type>;
 
 struct data_member { // Aggregate
     string name;
@@ -205,6 +208,21 @@ struct string_type : public builtin_type {
     string_type() : builtin_type("std::string") {}
 };
 
+struct integer_type : public builtin_type {
+    virtual void accept(type_visitor const& tv) const { tv.visit(*this); }
+    integer_type() : builtin_type("int") {}
+};
+
+struct double_type : public builtin_type {
+    virtual void accept(type_visitor const& tv) const { tv.visit(*this); }
+    double_type() : builtin_type("double") {}
+};
+
+struct date_type : public builtin_type {
+    virtual void accept(type_visitor const& tv) const { tv.visit(*this); }
+    date_type() : builtin_type("date") {}
+};
+
 struct complex_type : virtual public type_base, public scope {
     virtual void accept(type_visitor const& tv) const { tv.visit(*this); }
     complex_type(parser& p) 
@@ -220,6 +238,9 @@ protected:
 struct global_scope : virtual public complex_type {
     global_scope() {
         memberTypes["xs:string"] = make_unique<string_type>();
+        memberTypes["xs:integer"] = make_unique<integer_type>();
+        memberTypes["xs:double"] = make_unique<double_type>();
+        memberTypes["xs:date"] = make_unique<date_type>();
     }
     virtual void accept(type_visitor const & tv) const { tv.visit(*this); }
 };

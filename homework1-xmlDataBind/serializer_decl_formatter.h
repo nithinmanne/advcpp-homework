@@ -11,7 +11,7 @@ using fmt::format;
 
 namespace mpcs {
 namespace v1 {
-bases_t<complex_type, typelist<type_base, global_scope, complex_type, builtin_type, string_type> >* foo;
+bases_t<complex_type, typelist<type_base, global_scope, complex_type, builtin_type, string_type, integer_type, double_type, date_type> >* foo;
 inline string deserializer_specialization(type_base const& t) {
     return format("template<>\n{} fromXML<{}>(xml::parser &p, std::string name, bool alreadyInElement)",
         t.name, t.name);

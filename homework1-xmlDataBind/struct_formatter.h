@@ -131,6 +131,18 @@ R"(// Generated XML Schema Binding file
 #include <stdexcept>
 #include <optional>
 
+struct date {
+    int year;
+    int month;
+    int day;
+    date() = default;
+    date(std::string const& date) {
+        year = std::stoi(date.substr(0, 4));
+        month = std::stoi(date.substr(5, 2));
+        day = std::stoi(date.substr(8, 2));
+    }
+};
+
 template<typename T>
 T fromXML(xml::parser &p, std::string name = "", bool alreadyInElement = false);
 // skip over whitespace in XML file
@@ -175,6 +187,66 @@ return result;
         f.os << unindent << "}\n\n";
     }
     virtual void generate(generate_args & f, string_type const& s) override {
+        generate_args fa = gaForDeserialization(f);
+        generate_deserializer(fa, s);
+    }
+
+};
+template<>
+struct struct_formatter<integer_type> : public struct_formatter_bases<integer_type> {
+    void generate_deserializer(generate_args& f, integer_type const& s) {
+        f.os << "template<>\nint fromXML<int>(xml::parser &p, std::string name, bool alreadyInElement) {\n";
+        f.os << indent <<
+            R"(if(!alreadyInElement)
+    p.next_expect(xml::parser::start_element);
+p.next();
+int result = std::stoi(p.value());
+p.next_expect(xml::parser::end_element);
+return result;        
+)";
+        f.os << unindent << "}\n\n";
+    }
+    virtual void generate(generate_args& f, integer_type const& s) override {
+        generate_args fa = gaForDeserialization(f);
+        generate_deserializer(fa, s);
+    }
+
+};
+template<>
+struct struct_formatter<double_type> : public struct_formatter_bases<double_type> {
+    void generate_deserializer(generate_args& f, double_type const& s) {
+        f.os << "template<>\ndouble fromXML<double>(xml::parser &p, std::string name, bool alreadyInElement) {\n";
+        f.os << indent <<
+            R"(if(!alreadyInElement)
+    p.next_expect(xml::parser::start_element);
+p.next();
+double result = std::stod(p.value());
+p.next_expect(xml::parser::end_element);
+return result;        
+)";
+        f.os << unindent << "}\n\n";
+    }
+    virtual void generate(generate_args& f, double_type const& s) override {
+        generate_args fa = gaForDeserialization(f);
+        generate_deserializer(fa, s);
+    }
+
+};
+template<>
+struct struct_formatter<date_type> : public struct_formatter_bases<date_type> {
+    void generate_deserializer(generate_args& f, date_type const& s) {
+        f.os << "template<>\ndate fromXML<date>(xml::parser &p, std::string name, bool alreadyInElement) {\n";
+        f.os << indent <<
+            R"(if(!alreadyInElement)
+    p.next_expect(xml::parser::start_element);
+p.next();
+date result = p.value();
+p.next_expect(xml::parser::end_element);
+return result;        
+)";
+        f.os << unindent << "}\n\n";
+    }
+    virtual void generate(generate_args& f, date_type const& s) override {
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, s);
     }
