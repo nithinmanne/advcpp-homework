@@ -80,6 +80,17 @@ if(p.name() == "{}") {{
 )", dm.name, memberAssignment(dm));
         }
     }
+    void generateMemberSerializer(generate_args& f, data_member const& dm) {
+        if (!dm.optional) {
+            f.os << format(R"(result += toXML<{}>(element.{}, "{}", indent + 2);
+)", dm.type.name, dm.name, dm.name);
+        }
+        else {
+            f.os << format(R"(if (element.{})
+    result += toXML<{}>(element.{}.value(), "{}", indent + 2);
+)", dm.name, dm.type.name, dm.name, dm.name);
+        }
+    }
 
     void generate_deserializer(generate_args& f, complex_type const& ct) {
         f.os << deserializer_specialization(ct) << " {\n" << indent; 
@@ -105,12 +116,28 @@ return result;
         f.os << unindent << "}\n\n";
     }
 
+    void generate_serializer(generate_args& f, complex_type const& ct) {
+        f.os << serializer_specialization(ct) << " {\n" << indent;
+        if (!ct.anonymous)
+            f.os << format("if(name.empty()) name = \"{}\";\n", ct.containingElementName);
+        f.os << R"(std::string result = std::string(indent, ' ') + "<" + name + ">\n";
+)";
+        for (auto& dm : ct.dataMembers) {
+            generateMemberSerializer(f, dm);
+        }
+        f.os << R"(result += std::string(indent, ' ') + "</" + name + ">\n";
+return result;
+)";
+        f.os << unindent << "}\n\n";
+    }
+
     virtual void generate(generate_args& f, complex_type const &ct) override {
         generate_begin(f, ct);
         generate_members(f, ct);
         generate_end(f, ct);
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, ct);
+        generate_serializer(fa, ct);
     }
 };
 
@@ -145,6 +172,8 @@ struct date {
 
 template<typename T>
 T fromXML(xml::parser &p, std::string name = "", bool alreadyInElement = false);
+template<typename T>
+std::string toXML(T &element, std::string name = "", int indent = 0);
 // skip over whitespace in XML file
 void munchSpace(xml::parser &p)
 {
@@ -186,9 +215,20 @@ return result;
 )";
         f.os << unindent << "}\n\n";
     }
+    void generate_serializer(generate_args& f, string_type const& s) {
+        f.os << "template<>\nstd::string toXML<std::string>(std::string &element, std::string name, int indent) {\n";
+        f.os << indent <<
+            R"(std::string result = std::string(indent, ' ') + "<" + name + ">";
+result += element;
+result += "</" + name + ">\n";
+return result;
+)";
+        f.os << unindent << "}\n\n";
+    }
     virtual void generate(generate_args & f, string_type const& s) override {
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, s);
+        generate_serializer(fa, s);
     }
 
 };
@@ -206,9 +246,20 @@ return result;
 )";
         f.os << unindent << "}\n\n";
     }
+    void generate_serializer(generate_args& f, integer_type const& s) {
+        f.os << "template<>\nstd::string toXML<int>(int &element, std::string name, int indent) {\n";
+        f.os << indent <<
+            R"(std::string result = std::string(indent, ' ') + "<" + name + ">";
+result += std::to_string(element);
+result += "</" + name + ">\n";
+return result;
+)";
+        f.os << unindent << "}\n\n";
+    }
     virtual void generate(generate_args& f, integer_type const& s) override {
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, s);
+        generate_serializer(fa, s);
     }
 
 };
@@ -226,9 +277,20 @@ return result;
 )";
         f.os << unindent << "}\n\n";
     }
+    void generate_serializer(generate_args& f, double_type const& s) {
+        f.os << "template<>\nstd::string toXML<double>(double &element, std::string name, int indent) {\n";
+        f.os << indent <<
+            R"(std::string result = std::string(indent, ' ') + "<" + name + ">";
+result += std::to_string(element);
+result += "</" + name + ">\n";
+return result;
+)";
+        f.os << unindent << "}\n\n";
+    }
     virtual void generate(generate_args& f, double_type const& s) override {
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, s);
+        generate_serializer(fa, s);
     }
 
 };
@@ -246,9 +308,20 @@ return result;
 )";
         f.os << unindent << "}\n\n";
     }
+    void generate_serializer(generate_args& f, date_type const& s) {
+        f.os << "template<>\nstd::string toXML<date>(date &element, std::string name, int indent) {\n";
+        f.os << indent <<
+            R"(std::string result = std::string(indent, ' ') + "<" + name + ">";
+result += std::to_string(element.year) + "-" + std::to_string(element.month) + "-" + std::to_string(element.day);
+result += "</" + name + ">\n";
+return result;
+)";
+        f.os << unindent << "}\n\n";
+    }
     virtual void generate(generate_args& f, date_type const& s) override {
         generate_args fa = gaForDeserialization(f);
         generate_deserializer(fa, s);
+        generate_serializer(fa, s);
     }
 
 };

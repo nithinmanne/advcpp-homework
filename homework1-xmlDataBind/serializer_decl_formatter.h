@@ -16,6 +16,10 @@ inline string deserializer_specialization(type_base const& t) {
     return format("template<>\n{} fromXML<{}>(xml::parser &p, std::string name, bool alreadyInElement)",
         t.name, t.name);
 }
+inline string serializer_specialization(type_base const& t) {
+    return format("template<>\nstd::string toXML<{}>({} &element, std::string name, int indent)",
+        t.name, t.name);
+}
 
 template<typename T> struct serializer_decl_formatter;
 template<typename T>
@@ -26,6 +30,7 @@ template<typename T>
 struct serializer_decl_formatter : public serializer_decl_formatter_bases<T> {
     virtual void generate(generate_args& f, T const& ct) override {
         f.os << deserializer_specialization(ct) << ";\n";
+        f.os << serializer_specialization(ct) << ";\n";
     }
     virtual ~serializer_decl_formatter() = default;
 };
